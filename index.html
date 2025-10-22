@@ -1,44 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-     <link href="style.css" rel="stylesheet" type="text/css">
-     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scroll to Breathe</title>
+  <!-- Link to the external stylesheet -->
+  <link rel="stylesheet" href="style.css">
 </head>
 
-
 <body>
-    <div class="container">
-        <div class="mudi-text-box" data-aos="fade-right">
-            Hello! Welcome to my first ever scroll webpage!
-        </div>
-<!--------------------------->
-        <div class="mad-text-box" data-aos="fade-left">
-            Look at all the different gradients im using
-        </div>
-<!--------------------------->
-        <div class="mudi-text-box" data-aos="fade-right">
-            Are you enjoying the color show?
-        </div>
-<!--------------------------->
-        <div class="mad-text-box" data-aos="fade-left">
-            My name is Mudi!
-        </div>
-<!--------------------------->
-        <div class="mudi-text-box" data-aos="fade-right">
-            Contact me for any changes in these designs!
-        </div>
-<!--------------------------->
-        <div class="mad-text-box" data-aos="fade-left">
-            MKA413@NYU.EDU
-        </div>
-<!--------------------------->
+  <!--
+    The scroll‑container gives the page height.  It is set in the CSS to be
+    much taller than the viewport so that the user can scroll down slowly.
+    We keep the shapes and text fixed on the screen (using CSS
+    position: fixed) so they appear to float while the background and
+    animation change with the scroll.
+  -->
+  <div id="scroll-container">
+    <!-- Breathing shapes live inside a fixed container so they don't move
+         with the page.  Each element uses CSS to define its base size,
+         colour and circular shape.  JavaScript scales them up and down
+         according to the scroll progress. -->
+    <div id="breathing-shapes">
+      <div class="shape" id="circle1"></div>
+      <div class="shape" id="circle2"></div>
+      <div class="shape" id="circle3"></div>
     </div>
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script>
-      AOS.init({
-        duration: 3000,
-        once: true,
-      });
-    </script>
+    <!-- Messages container.  Each paragraph holds a short affirmation.
+         Their opacity is controlled in the script to fade in and out
+         gently as the user scrolls. -->
+    <div id="messages">
+      <!-- Additional affirmations added above and below to deepen the
+           reflective experience.  Feel free to modify the text to suit
+           your own perspective on digital mindfulness. -->
+      <p class="affirmation">Disconnect to reconnect.</p>
+      <p class="affirmation">You are not your feed.</p>
+      <p class="affirmation">Rest is resistance.</p>
+      <p class="affirmation">You can stop scrolling now.</p>
+      <p class="affirmation">The scroll never ends, only your attention does.</p>
+    </div>
+  </div>
+
+  <!-- The final overlay has been removed for infinite scrolling.  We instead
+       allow the page to loop back to the top when you reach the end.
+       If you wish to restart manually, use your browser's scroll bar. -->
+
+  <!-- Optional audio controls.  A small button toggles ambient sound on
+       or off.  The <audio> element is kept empty by default; if you wish
+       to include ambient music or field recordings, add a <source>
+       element inside with the appropriate file path. -->
+  <div id="audio-controls">
+    <button id="audio-toggle">Play Sound</button>
+  </div>
+  
+  <audio id="ambient-audio" loop src="breathing-160445.mp3"></audio>
+
+
+  <!-- External JavaScript file that handles scroll‑based animation and
+       interactivity.  Keeping logic in a separate file makes the HTML
+       easier to read and maintain. -->
+  <script src="script.js"></script>
 </body>
+
 </html>

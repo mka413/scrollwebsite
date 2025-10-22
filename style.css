@@ -1,56 +1,175 @@
-*{
-    margin: 0;
-    padding: 0;
+
+@font-face {
+  font-family: 'Halisun';
+  src: url('fonts/Halisun Demo.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
 }
 
-body{
-    font-size: 30px;
-    font-family: sans-serif;
- background: #40E0D0;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #FF0080, #FF8C00, #40E0D0);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #FF0080, #FF8C00, #40E0D0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
+/*
+  Global styles define the look and feel of the page.  The design is
+  intentionally minimal: generous white space, soft colours and a
+  sans‑serif font help create a calm atmosphere.  Colours and sizes
+  adjust dynamically in the JavaScript based on scroll position.
+*/
+
+html,
+body {
+  /* Remove explicit height so the page can grow taller than the
+     viewport.  Without this, window.pageYOffset remains zero
+     because the body cannot exceed 100% of the viewport. */
+  margin: 0;
+  padding: 0;
+  font-family: "Halisun", sans-serif;
+  /* Default background; JavaScript overwrites this with HSL values */
+  background-color: hsl(200, 60%, 60%);
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  color: #222;
 }
 
-.container{
-    display: flex;
-    justify-content: center;
-    position: relative;
-    align-items: center;
-    width: 100%;
-    flex-direction: column;
+/* Provide a large height so there is enough room to scroll.  You can
+   adjust this value to change the length of the experience.  The
+   content inside remains fixed to the viewport via position: fixed. */
+#scroll-container {
+  height: 40000px;
+  position: relative;
 }
 
-.mudi-text-box{
-    box-shadow: 30px 10px 10px rgba(0, 0, 0, 0.2);
-    height: 300px;
-    width: 700px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #8360c3;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #2ebf91, #8360c3);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #2ebf91, #8360c3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    
-    color: black;
-    margin: 100px 0;
-    border-radius: 10px;
-
+/* Fixed container for the breathing shapes.  It covers the full
+   viewport, centring its children both vertically and horizontally. */
+#breathing-shapes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  /* allow scrolling to pass through */
+  z-index: 1;
+  /* ensure shapes sit beneath text */
 }
 
-.mad-text-box{
-    box-shadow: 30px 10px 10px rgba(0, 0, 0, 0.2);
-    height: 300px;
-    width: 700px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #544a7d;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #ffd452, #544a7d);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #ffd452, #544a7d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+/* Each shape is a circle defined via border-radius.  The size and
+   colour are defined here; JavaScript updates the transform scale to
+   simulate breathing. */
+.shape {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  opacity: 0.5;
+  transition: transform 0.2s ease-out;
+}
 
-    color: black;
-    margin: 100px 0;
-    border-radius: 10px;
+#circle1 {
+  background: rgba(255, 255, 255, 0.2);
+}
 
+#circle2 {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+#circle3 {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Messages appear centred on the screen.  We stack them on top of
+   each other; their opacity is animated in the script. */
+#messages {
+  position: fixed;
+  top: 40%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+  /* don't capture clicks */
+  z-index: 2;
+  /* place messages above shapes */
+}
+
+.affirmation {
+  font-size: 2rem;
+  margin: 0;
+  line-height: 1.3;
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+  color: #fff;
+  /* white text for better contrast on coloured backgrounds */
+  /* Add a gentle text shadow to improve readability on coloured
+     backgrounds.  The small blur radius keeps the effect subtle. */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Final overlay covers the screen with a black background and white
+   text.  Initially invisible; it fades in when triggered by the
+   script. */
+#final-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 1);
+  color: white;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+  z-index: 5;
+  /* ensure overlay sits above all other content */
+}
+
+.final-text {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  /* Text shadow helps the white letters stand out against the black
+     overlay. */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#restart-btn {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  background-color: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#restart-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Audio controls are positioned in the bottom right. */
+#audio-controls {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  z-index: 10;
+}
+
+#audio-toggle {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #222;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  transition: background-color 0.3s;
+}
+
+#audio-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.5);
 }
